@@ -1,3 +1,6 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBP7-wv0iSxI7aZAPJ-EWLDoNUySt6o_yo",
   authDomain: "smart-reminder-c0b89.firebaseapp.com",
@@ -7,3 +10,7 @@ const firebaseConfig = {
   appId: "1:16660804934:web:d13cd9c4166af3e0b42147",
   measurementId: "G-FYT7JK1JMW"
 };
+
+const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);
