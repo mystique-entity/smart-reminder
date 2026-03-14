@@ -1,12 +1,18 @@
-function TaskList({ tasks, toggleTask }) {
+function TaskList({tasks,toggleTask}){
 
   return(
 
-    <ul style={{marginTop:"20px",paddingLeft:"20px"}}>
+    <ul style={{marginTop:"20px"}}>
 
       {tasks.map((task,index)=>(
-        
-        <li key={index} style={{marginBottom:"10px"}}>
+
+        <li
+          key={task.id}
+          style={{
+            marginBottom:"10px",
+            fontSize:"16px"
+          }}
+        >
 
           <label>
 
@@ -19,7 +25,7 @@ function TaskList({ tasks, toggleTask }) {
 
             <span
               style={{
-                textDecoration: task.completed ? "line-through" : "none"
+                textDecoration:task.completed?"line-through":"none"
               }}
             >
               {task.text}

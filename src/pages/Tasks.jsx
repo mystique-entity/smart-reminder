@@ -2,31 +2,62 @@ import Navbar from "../components/Navbar"
 import AddTask from "../components/AddTask"
 import TaskList from "../components/TaskList"
 
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+
+import { db } from "../firebase"
+import { collection,addDoc,getDocs,updateDoc,doc } from "firebase/firestore"
 
 function Tasks(){
 
   const [tasks,setTasks] = useState([])
   const navigate = useNavigate()
 
-  function addTask(text){
+  const tasksRef = collection(db,"tasks")
+
+  useEffect(()=>{
+    loadTasks()
+  },[])
+
+  async function loadTasks(){
+
+    const data = await getDocs(tasksRef)
+
+    const list = data.docs.map(d=>({
+      id:d.id,
+      ...d.data()
+    }))
+
+    setTasks(list)
+  }
+
+  async function addTask(text){
 
     const newTask={
       text:text,
       completed:false
     }
 
-    setTasks([...tasks,newTask])
+    const docRef = await addDoc(tasksRef,newTask)
+
+    setTasks([...tasks,{id:docRef.id,...newTask}])
   }
 
-  function toggleTask(index){
+  async function toggleTask(index){
 
     const updated=[...tasks]
 
     updated[index].completed=!updated[index].completed
 
     setTasks(updated)
+
+    const task=updated[index]
+
+    const taskDoc=doc(db,"tasks",task.id)
+
+    await updateDoc(taskDoc,{
+      completed:task.completed
+    })
   }
 
   return(
@@ -48,8 +79,6 @@ function Tasks(){
         }}
       >
 
-        {/* HEADER */}
-
         <div
           style={{
             display:"flex",
@@ -63,40 +92,21 @@ function Tasks(){
             <p style={{color:"#666"}}>Welcome back</p>
           </div>
 
-          <div style={{display:"flex",gap:"10px"}}>
-
-            <button
-              style={{
-                padding:"10px 18px",
-                border:"none",
-                borderRadius:"12px",
-                background:"linear-gradient(90deg,#8f5cff,#ff5fa2)",
-                color:"white",
-                cursor:"pointer"
-              }}
-            >
-              + Add Task
-            </button>
-
-            <button
-              onClick={() => navigate("/map")}
-              style={{
-                padding:"10px 18px",
-                border:"none",
-                borderRadius:"12px",
-                background:"linear-gradient(90deg,#8f5cff,#ff5fa2)",
-                color:"white",
-                cursor:"pointer"
-              }}
-            >
-              + Select Location
-            </button>
-
-          </div>
+          <button
+            onClick={()=>navigate("/map")}
+            style={{
+              padding:"10px 18px",
+              border:"none",
+              borderRadius:"12px",
+              background:"linear-gradient(90deg,#8f5cff,#ff5fa2)",
+              color:"white",
+              cursor:"pointer"
+            }}
+          >
+            + Select Location
+          </button>
 
         </div>
-
-        {/* FILTER TABS */}
 
         <div
           style={{
@@ -121,35 +131,19 @@ function Tasks(){
             All ({tasks.length})
           </div>
 
-          <div
-            style={{
-              padding:"6px 14px",
-              borderRadius:"20px"
-            }}
-          >
-            Individual (0)
+          <div style={{padding:"6px 14px"}}>
+            Individual
           </div>
 
-          <div
-            style={{
-              padding:"6px 14px",
-              borderRadius:"20px"
-            }}
-          >
-            Collaborated (0)
+          <div style={{padding:"6px 14px"}}>
+            Group Tasks
           </div>
 
         </div>
-
-
-        {/* ADD TASK INPUT */}
 
         <div style={{marginTop:"25px"}}>
           <AddTask addTask={addTask}/>
         </div>
-
-
-        {/* TASK LIST CARD */}
 
         <div
           style={{
@@ -161,17 +155,15 @@ function Tasks(){
           }}
         >
 
-          {tasks.length === 0 ? (
+          {tasks.length===0 ?(
 
             <div style={{textAlign:"center",color:"#666"}}>
               <h3>No tasks yet</h3>
               <p>Create your first task to get started!</p>
             </div>
 
-          ) : (
-
+          ):(
             <TaskList tasks={tasks} toggleTask={toggleTask}/>
-
           )}
 
         </div>
