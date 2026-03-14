@@ -1,4 +1,4 @@
-function TaskList({ tasks, toggleTask }) {
+function TaskList({tasks,toggleTask}){
 
   return(
 
@@ -17,11 +17,9 @@ function TaskList({ tasks, toggleTask }) {
               style={{marginRight:"10px"}}
             />
 
-            <span
-              style={{
-                textDecoration: task.completed ? "line-through" : "none"
-              }}
-            >
+            <span style={{
+              textDecoration:task.completed?"line-through":"none"
+            }}>
               {task.text}
             </span>
 

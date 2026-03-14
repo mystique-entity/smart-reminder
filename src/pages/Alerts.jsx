@@ -1,123 +1,77 @@
+import { useLocation } from "react-router-dom"
+import { useState } from "react"
+
 function Alerts(){
+
+  const location = useLocation()
+
+  const [alerts,setAlerts] = useState(location.state?.alerts || [])
+
+  function markRead(index){
+
+    const updated=[...alerts]
+
+    updated[index].read=true
+
+    setAlerts(updated)
+  }
+
+  function markAll(){
+
+    const updated=alerts.map(a=>({...a,read:true}))
+
+    setAlerts(updated)
+  }
+
+  const unread=alerts.filter(a=>!a.read)
+  const read=alerts.filter(a=>a.read)
 
   return(
 
-    <div
-      style={{
-        minHeight:"100vh",
-        background:"linear-gradient(135deg,#f3e7ff,#e9f0ff)",
-        padding:"40px"
-      }}
-    >
+    <div style={{padding:"40px"}}>
 
-      <div
-        style={{
-          maxWidth:"900px",
-          margin:"auto"
-        }}
-      >
+      <h1>Alerts & Notifications</h1>
 
-        <h1
-          style={{
-            color:"#7b3fe4",
-            marginBottom:"10px"
-          }}
-        >
-          Alerts & Notifications
-        </h1>
+      <button onClick={markAll} style={{marginBottom:"20px"}}>
+        Mark All as Read
+      </button>
 
-        <p style={{marginBottom:"30px",color:"#666"}}>
-          Stay updated on your tasks and team activities
-        </p>
+      <h2>Unread ({unread.length})</h2>
 
+      {unread.map((a,i)=>(
+        <div key={i} style={{
+          background:"#ffe5c7",
+          padding:"20px",
+          borderRadius:"10px",
+          marginBottom:"15px"
+        }}>
 
-        {/* Unread Section */}
+          <h3>{a.title}</h3>
+          <p>Task: {a.task}</p>
+          <p>{a.time}</p>
 
-        <h3 style={{marginBottom:"15px"}}>Unread</h3>
-
-        <div
-          style={{
-            background:"#ffe9c7",
-            borderRadius:"15px",
-            padding:"20px",
-            marginBottom:"20px",
-            display:"flex",
-            justifyContent:"space-between",
-            alignItems:"center"
-          }}
-        >
-
-          <div>
-            <h3 style={{margin:"0"}}>Task is due soon</h3>
-            <p style={{margin:"5px 0"}}>Team meeting preparation</p>
-          </div>
-
-          <button
-            style={{
-              border:"none",
-              background:"white",
-              padding:"8px 16px",
-              borderRadius:"8px",
-              cursor:"pointer"
-            }}
-          >
+          <button onClick={()=>markRead(i)}>
             Mark as read
           </button>
 
         </div>
+      ))}
 
+      <h2>Read</h2>
 
-        <div
-          style={{
-            background:"#dceaff",
-            borderRadius:"15px",
-            padding:"20px",
-            marginBottom:"20px",
-            display:"flex",
-            justifyContent:"space-between",
-            alignItems:"center"
-          }}
-        >
+      {read.map((a,i)=>(
+        <div key={i} style={{
+          background:"#eee",
+          padding:"20px",
+          borderRadius:"10px",
+          marginBottom:"15px"
+        }}>
 
-          <div>
-            <h3 style={{margin:"0"}}>You were assigned a new task</h3>
-            <p style={{margin:"5px 0"}}>Project review</p>
-          </div>
-
-          <button
-            style={{
-              border:"none",
-              background:"white",
-              padding:"8px 16px",
-              borderRadius:"8px",
-              cursor:"pointer"
-            }}
-          >
-            Mark as read
-          </button>
+          <h3>{a.title}</h3>
+          <p>Task: {a.task}</p>
 
         </div>
-
-
-        {/* Read Section */}
-
-        <h3 style={{marginTop:"40px"}}>Read</h3>
-
-        <div
-          style={{
-            background:"#f5f5f5",
-            borderRadius:"15px",
-            padding:"20px",
-            marginTop:"15px"
-          }}
-        >
-
-          <h3 style={{margin:"0"}}>Task was updated by Alice</h3>
-          <p style={{margin:"5px 0"}}>Team meeting preparation</p>
-
-        </div>
-
-      </div>
+      ))}
 
     </div>
 
