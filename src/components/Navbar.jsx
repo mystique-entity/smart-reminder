@@ -1,10 +1,19 @@
-function Navbar() {
-  return (
-    <div style={{background:"#1e1e1e", color:"white", padding:"15px"}}>
-      <h2>Smart Reminder</h2>
-      <p>Location Based Reminder System</p>
+function Navbar(){
+
+  return(
+
+    <div className="navbar">
+
+      <div className="logo">TaskHub</div>
+
+      <div>
+        <button className="btn">Tasks</button>
+      </div>
+
     </div>
-  );
+
+  )
+
 }
 
-export default Navbar;
+export default Navbar

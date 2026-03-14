@@ -1,28 +1,39 @@
-function TaskList({ tasks, toggleTask }) {
+import { useState } from "react"
 
-  return (
-    <div style={{marginTop:"20px"}}>
+function AddTask({addTask}){
 
-      <h3>Tasks</h3>
+  const [task,setTask] = useState("")
 
-      {tasks.map((task, index) => (
-        <div key={index} style={{marginBottom:"8px"}}>
+  function handleAdd(){
 
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={() => toggleTask(index)}
-          />
+    if(task==="") return
 
-          <span style={{marginLeft:"8px"}}>
-            {task.text}
-          </span>
+    addTask(task)
+    setTask("")
 
-        </div>
-      ))}
+  }
+
+  return(
+
+    <div className="task-box">
+
+      <h2>My Tasks</h2>
+
+      <input
+        type="text"
+        placeholder="Enter new task"
+        value={task}
+        onChange={(e)=>setTask(e.target.value)}
+      />
+
+      <button className="btn" onClick={handleAdd} style={{marginLeft:"10px"}}>
+        Add Task
+      </button>
 
     </div>
-  );
+
+  )
+
 }
 
-export default TaskList;
+export default AddTask

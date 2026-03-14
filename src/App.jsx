@@ -1,40 +1,20 @@
-import { useState } from "react";
-import Navbar from "./components/Navbar";
-import AddTask from "./components/AddTask";
-import TaskList from "./components/TaskList";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login.jsx";
+import Tasks from "./pages/Tasks.jsx";
+import Alerts from "./pages/Alerts.jsx";
+import MapPage from "./pages/MapPage.jsx";
 
 function App() {
-
-  const [tasks, setTasks] = useState([]);
-
-  function addTask(text) {
-
-    const newTask = {
-      text: text,
-      completed: false
-    };
-
-    setTasks([...tasks, newTask]);
-  }
-
-  function toggleTask(index) {
-
-    const updatedTasks = [...tasks];
-    updatedTasks[index].completed = !updatedTasks[index].completed;
-
-    setTasks(updatedTasks);
-  }
-
   return (
-    <div style={{padding:"20px"}}>
-
-      <Navbar />
-
-      <AddTask addTask={addTask} />
-
-      <TaskList tasks={tasks} toggleTask={toggleTask} />
-
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/alerts" element={<Alerts />} />
+        <Route path="/map" element={<MapPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
